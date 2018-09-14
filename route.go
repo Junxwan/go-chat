@@ -10,7 +10,9 @@ func setupRouter() {
 
 	router.GET("/", checkPermission(), showIndex)
 	router.GET("/login", showLogin)
+	router.POST("/login", attempt)
 	router.GET("/register", showRegister)
+	router.POST("/register", register)
 
 	router.Run()
 }

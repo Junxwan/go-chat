@@ -2,7 +2,9 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"math/rand"
 	"net/http"
+	"strconv"
 )
 
 // 使用者結構
@@ -18,6 +20,10 @@ type member struct {
 // 現已註冊的使用者
 var account member
 
+func init() {
+	account.addUser("test@gmai.com", "123456")
+}
+
 // 登入頁
 func showLogin(c *gin.Context) {
 	reade(c, "login.html", gin.H{})
@@ -26,6 +32,50 @@ func showLogin(c *gin.Context) {
 // 註冊頁
 func showRegister(c *gin.Context) {
 	reade(c, "register.html", gin.H{})
+}
+
+// 嘗試登入
+func attempt(c *gin.Context) {
+	username, _ := c.GetPostForm("username")
+	password, _ := c.GetPostForm("password")
+
+	if (account.isUser(username, password)) {
+		login(c)
+	} else {
+		reade(c, "login.html", gin.H{
+			"message": "登入失敗",
+		})
+	}
+}
+
+// 登入
+func login(c *gin.Context) {
+	c.SetCookie("login", strconv.FormatInt(rand.Int63(), 20), 3600, "", "", false, true)
+
+	c.Set("isLogin", true)
+
+	reade(c, "index.html", gin.H{})
+}
+
+// 註冊
+func register(c *gin.Context) {
+	var form user
+	message := ""
+
+	username, _ := c.GetPostForm("username")
+	password, _ := c.GetPostForm("password")
+
+	if err := c.ShouldBind(&form); err == nil {
+		account.addUser(username, password)
+
+		message = "恭喜你註冊成功，請前往登入頁做登入"
+	} else {
+		message = "帳號密碼輸入有誤請重新填寫"
+	}
+
+	reade(c, "login.html", gin.H{
+		"message": message,
+	})
 }
 
 // 新增會員
