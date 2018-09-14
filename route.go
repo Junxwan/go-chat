@@ -2,16 +2,24 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
-var router *gin.Engine
-
 func setupRouter() {
-	router = gin.Default()
+	router.Use(checkLogin())
 
-	router.StaticFile("/", "./view/index.html")
-	router.StaticFile("/login", "./view/login.html")
-	router.StaticFile("/register", "./view/register.html")
+	router.GET("/", checkPermission(), showIndex)
+	router.GET("/login", showLogin)
+	router.GET("/register", showRegister)
 
 	router.Run()
+}
+
+// 讀取view
+func reade(c *gin.Context, view string, data gin.H) {
+	isLogin, _ := c.Get("isLogin")
+
+	data["isLogin"] = isLogin.(bool)
+
+	c.HTML(http.StatusOK, view, data)
 }
