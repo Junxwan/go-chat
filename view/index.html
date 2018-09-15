@@ -5,12 +5,11 @@
     <script src='//static.codepen.io/assets/editor/live/css_live_reload_init-e9c0cc5bb634d3d14b840de051920ac153d7d3d36fb050abad285779d7e5e8bd.js'></script>
     <meta charset='UTF-8'>
     <meta name="robots" content="noindex">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="canonical" href="https://codepen.io/Momciloo/pen/bEdbxY"/>
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600" rel="stylesheet">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <style class="cp-pen-styles">*, *:before, *:after {
         box-sizing: border-box;
     }
@@ -432,54 +431,7 @@
                 <div class="conversation-start">
                     <span>Today</span>
                 </div>
-                <div class="bubble you">
-                    Hello, can you hear me?
-                </div>
-                <div class="bubble you">
-                    I'm in California dreaming
-                </div>
-                <div class="bubble me">
-                    ... about who we used to be.
-                </div>
-                <div class="bubble me">
-                    Are you serious?
-                </div>
-                <div class="bubble you">
-                    When we were younger and free...
-                </div>
-                <div class="bubble you">
-                    I've forgotten how it felt before
-                </div>
-                <div class="bubble you">
-                    When we were younger and free...
-                </div>
-                <div class="bubble you">
-                    I've forgotten how it felt before
-                </div>
-                <div class="bubble you">
-                    When we were younger and free...
-                </div>
-                <div class="bubble you">
-                    I've forgotten how it felt before
-                </div>
-                <div class="bubble you">
-                    When we were younger and free...
-                </div>
-                <div class="bubble you">
-                    I've forgotten how it felt before
-                </div>
-                <div class="bubble you">
-                    When we were younger and free...
-                </div>
-                <div class="bubble you">
-                    I've forgotten how it felt before
-                </div>
-                <div class="bubble you">
-                    When we were younger and free...
-                </div>
-                <div class="bubble you">
-                    I've forgotten how it felt before
-                </div>
+
             </div>
             <div class="write">
                 <input type="text" id="message"/>
@@ -526,6 +478,20 @@
 
     var element = document.querySelector(".chat");
     element.scrollTop = element.scrollHeight;
+
+    message = fetch('/chat')
+            .then(response => response.json())
+            .then(message => {
+                        message.forEach((i) => {
+                            if (i.To === 1) {
+                                var div = '<div class="bubble you">' + i.Msg + '</div>'
+                            } else {
+                                var div = '<div class="bubble me">' + i.Msg + '</div>'
+                            }
+                            $('.active-chat .conversation-start').after(div)
+                        })
+                    }
+            )
 
     // var sock = null;
     // var wsuri = "ws://127.0.0.1:8080/websocket"
