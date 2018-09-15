@@ -7,6 +7,11 @@ import (
 	"strconv"
 )
 
+type loginForm struct {
+	Account  string `form:"account" binding:"required,email"`
+	Password string `form:"password" binding:"required"`
+}
+
 func init() {
 	Member.add("test", "test@gmai.com", "123456")
 	Member.add("guest", "test2@gmai.com", "123456")
@@ -24,10 +29,11 @@ func ShowRegister(c *gin.Context) {
 
 // 嘗試登入
 func Attempt(c *gin.Context) {
-	account, _ := c.GetPostForm("account")
-	password, _ := c.GetPostForm("password")
+	var form loginForm
 
-	if (Member.exist(account, password)) {
+	c.ShouldBind(&form)
+
+	if (Member.exist(form.Account, form.Password)) {
 		login(c)
 	} else {
 		reade(c, "login.html", gin.H{
@@ -50,12 +56,8 @@ func Register(c *gin.Context) {
 	var form User
 	message := ""
 
-	account, _ := c.GetPostForm("account")
-	password, _ := c.GetPostForm("password")
-	name, _ := c.GetPostForm("name")
-
 	if err := c.ShouldBind(&form); err == nil {
-		Member.add(name, account, password)
+		Member.add(form.Name, form.Account, form.Password)
 
 		message = "恭喜你註冊成功，請前往登入頁做登入"
 	} else {
