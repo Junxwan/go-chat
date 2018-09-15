@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	member.addUser("junx", "test@gmai.com", "123456")
+	member.add("junx", "test@gmai.com", "123456")
 }
 
 // 登入頁
@@ -26,7 +26,7 @@ func attempt(c *gin.Context) {
 	username, _ := c.GetPostForm("username")
 	password, _ := c.GetPostForm("password")
 
-	if (member.isUser(username, password)) {
+	if (member.exist(username, password)) {
 		login(c)
 	} else {
 		reade(c, "login.html", gin.H{
@@ -54,7 +54,7 @@ func register(c *gin.Context) {
 	name, _ := c.GetPostForm("name")
 
 	if err := c.ShouldBind(&form); err == nil {
-		member.addUser(name, username, password)
+		member.add(name, username, password)
 
 		message = "恭喜你註冊成功，請前往登入頁做登入"
 	} else {

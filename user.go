@@ -13,7 +13,7 @@ type account []user
 var member account
 
 // 新增會員
-func (a account) addUser(name, username, password string) {
+func (a account) add(name, username, password string) {
 	member = append(a, user{
 		Username: username,
 		Password: password,
@@ -22,7 +22,7 @@ func (a account) addUser(name, username, password string) {
 }
 
 // 檢查帳號是否正確
-func (a account) isUser(username, password string) bool {
+func (a account) exist(username, password string) bool {
 	for _, u := range a {
 		if u.Username == username && u.Password == password {
 			return true
