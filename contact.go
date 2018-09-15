@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"go-chat/auth"
 	"net/http"
 )
 
@@ -31,7 +32,7 @@ func addContact(c *gin.Context) {
 
 	c.ShouldBindJSON(&body)
 
-	m, ok := member.get(body.Contact)
+	m, ok := auth.Member.Get(body.Contact)
 
 	if (ok && contactRelated.add(body.Name, m.Name)) {
 		c.JSON(http.StatusOK, gin.H{

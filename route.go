@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"go-chat/auth"
 )
 
 func setupRouter() *gin.Engine {
@@ -10,27 +10,18 @@ func setupRouter() *gin.Engine {
 
 	router.LoadHTMLGlob("view/*")
 
-	router.Use(checkLogin())
+	router.Use(auth.CheckLogin())
 
 	router.Static("/images", "./images")
 
-	router.GET("/", checkPermission(), showIndex)
-	router.GET("/login", showLogin)
-	router.POST("/login", attempt)
-	router.GET("/register", showRegister)
-	router.POST("/register", register)
-	router.GET("/chat", checkPermission(), getChat)
-	router.POST("/contact", checkPermission(), addContact)
+	router.GET("/", auth.CheckPermission(), showIndex)
+	router.GET("/login", auth.ShowLogin)
+	router.POST("/login", auth.Attempt)
+	router.GET("/register", auth.ShowRegister)
+	router.POST("/register", auth.Register)
+	router.GET("/chat", auth.CheckPermission(), getChat)
+	router.POST("/contact", auth.CheckPermission(), addContact)
 	router.GET("/contact", getContact)
 
 	return router
-}
-
-// 讀取view
-func reade(c *gin.Context, view string, data gin.H) {
-	isLogin, _ := c.Get("isLogin")
-
-	data["isLogin"] = isLogin.(bool)
-
-	c.HTML(http.StatusOK, view, data)
 }

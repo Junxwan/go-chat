@@ -12,7 +12,7 @@ type message struct {
 
 var Chat []message
 
-func init()  {
+func init() {
 	Chat = append(Chat, message{To: 1, Msg: "Hello,"})
 	Chat = append(Chat, message{To: 1, Msg: "it's me."})
 	Chat = append(Chat, message{To: 2, Msg: "... about who we used to be."})
@@ -27,4 +27,13 @@ func showIndex(c *gin.Context) {
 // 聊天室訊息
 func getChat(c *gin.Context) {
 	c.JSON(http.StatusOK, Chat)
+}
+
+// 讀取view
+func reade(c *gin.Context, view string, data gin.H) {
+	isLogin, _ := c.Get("isLogin")
+
+	data["isLogin"] = isLogin.(bool)
+
+	c.HTML(http.StatusOK, view, data)
 }

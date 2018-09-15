@@ -4,6 +4,7 @@ import (
 	"github.com/appleboy/gofight"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
+	"go-chat/auth"
 	"net/http"
 	"testing"
 )
@@ -14,7 +15,7 @@ func init() {
 
 func initial() {
 	contactRelated = []person{}
-	member = []user{}
+	auth.Member = []auth.User{}
 }
 
 func TestGetContact(t *testing.T) {
@@ -74,9 +75,9 @@ func TestAddContactApi(t *testing.T) {
 		User: []string{"sam", "add"},
 	})
 
-	member = append(member, user{
+	auth.Member = append(auth.Member, auth.User{
 		Name:     "add",
-		Username: "test@gmail.com",
+		Account:  "test@gmail.com",
 		Password: "123456",
 	})
 

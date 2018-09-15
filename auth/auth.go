@@ -1,4 +1,4 @@
-package main
+package auth
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,26 +8,26 @@ import (
 )
 
 func init() {
-	member.add("test", "test@gmai.com", "123456")
-	member.add("guest", "test2@gmai.com", "123456")
+	Member.add("test", "test@gmai.com", "123456")
+	Member.add("guest", "test2@gmai.com", "123456")
 }
 
 // 登入頁
-func showLogin(c *gin.Context) {
+func ShowLogin(c *gin.Context) {
 	reade(c, "login.html", gin.H{})
 }
 
 // 註冊頁
-func showRegister(c *gin.Context) {
+func ShowRegister(c *gin.Context) {
 	reade(c, "register.html", gin.H{})
 }
 
 // 嘗試登入
-func attempt(c *gin.Context) {
+func Attempt(c *gin.Context) {
 	account, _ := c.GetPostForm("account")
 	password, _ := c.GetPostForm("password")
 
-	if (member.exist(account, password)) {
+	if (Member.exist(account, password)) {
 		login(c)
 	} else {
 		reade(c, "login.html", gin.H{
@@ -46,8 +46,8 @@ func login(c *gin.Context) {
 }
 
 // 註冊
-func register(c *gin.Context) {
-	var form user
+func Register(c *gin.Context) {
+	var form User
 	message := ""
 
 	account, _ := c.GetPostForm("account")
@@ -55,7 +55,7 @@ func register(c *gin.Context) {
 	name, _ := c.GetPostForm("name")
 
 	if err := c.ShouldBind(&form); err == nil {
-		member.add(name, account, password)
+		Member.add(name, account, password)
 
 		message = "恭喜你註冊成功，請前往登入頁做登入"
 	} else {
@@ -68,7 +68,7 @@ func register(c *gin.Context) {
 }
 
 // 檢查操作權限
-func checkPermission() gin.HandlerFunc {
+func CheckPermission() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		isLogin, _ := c.Get("isLogin")
 
@@ -79,7 +79,7 @@ func checkPermission() gin.HandlerFunc {
 }
 
 // 檢查是否已登入
-func checkLogin() gin.HandlerFunc {
+func CheckLogin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if token, err := c.Cookie("login"); err == nil && token != "" {
 			c.Set("isLogin", true)
@@ -87,4 +87,13 @@ func checkLogin() gin.HandlerFunc {
 			c.Set("isLogin", false)
 		}
 	}
+}
+
+// 讀取view
+func reade(c *gin.Context, view string, data gin.H) {
+	isLogin, _ := c.Get("isLogin")
+
+	data["isLogin"] = isLogin.(bool)
+
+	c.HTML(http.StatusOK, view, data)
 }

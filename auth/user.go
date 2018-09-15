@@ -1,20 +1,20 @@
-package main
+package auth
 
 // 使用者結構
-type user struct {
+type User struct {
 	Account  string `form:"account" binding:"required,email"`
 	Password string `form:"password" binding:"required"`
 	Name     string `form:"name" binding:"required"`
 }
 
 // 已註冊的使用者
-type account []user
+type account []User
 
-var member account
+var Member account
 
 // 新增會員
 func (a account) add(name, account, password string) {
-	member = append(a, user{
+	Member = append(a, User{
 		Account:  account,
 		Password: password,
 		Name:     name,
@@ -32,11 +32,11 @@ func (a account) exist(account, password string) bool {
 }
 
 // 取user
-func (a account) get(name string) (user, bool) {
+func (a account) Get(name string) (User, bool) {
 	for _, u := range a {
 		if u.Name == name {
 			return u, true
 		}
 	}
-	return user{}, false
+	return User{}, false
 }
