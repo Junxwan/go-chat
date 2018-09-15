@@ -68,9 +68,9 @@
     </div>
 </div>
 <script type="text/javascript">
-    {{ if .message }}
-    alert({{ .message }})
-    localStorage.setItem("lastname", "Smith");
+    {{ if .isLogin }}
+    localStorage.setItem("name", {{ .name }});
+    location.href = '/'
     {{ end }}
 </script>
 </body>

@@ -30,25 +30,31 @@ func ShowRegister(c *gin.Context) {
 // 嘗試登入
 func Attempt(c *gin.Context) {
 	var form loginForm
+	name := ""
 
 	c.ShouldBind(&form)
 
-	if (Member.exist(form.Account, form.Password)) {
-		login(c)
-	} else {
-		reade(c, "login.html", gin.H{
-			"message": "登入失敗",
-		})
+	if (login(c, form.Account, form.Password)) {
+		m, _ := Member.GetByAccount(form.Account)
+		name = m.Name
 	}
+
+	reade(c, "login.html", gin.H{
+		"name": name,
+	})
 }
 
 // 登入
-func login(c *gin.Context) {
+func login(c *gin.Context, account, password string) bool {
+	if (! Member.exist(account, password)) {
+		return false
+	}
+
 	c.SetCookie("login", strconv.FormatInt(rand.Int63(), 20), 3600, "", "", false, true)
 
 	c.Set("isLogin", true)
 
-	reade(c, "index.html", gin.H{})
+	return true
 }
 
 // 註冊

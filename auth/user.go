@@ -31,10 +31,20 @@ func (a account) exist(account, password string) bool {
 	return false
 }
 
-// 取user
+// 根據名稱取user
 func (a account) Get(name string) (User, bool) {
 	for _, u := range a {
 		if u.Name == name {
+			return u, true
+		}
+	}
+	return User{}, false
+}
+
+// 根據帳號取user
+func (a account) GetByAccount(account string) (User, bool) {
+	for _, u := range a {
+		if u.Account == account {
 			return u, true
 		}
 	}
