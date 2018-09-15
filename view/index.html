@@ -419,7 +419,7 @@
 <script>
     contact()
 
-    $('li.person').click(function () {
+    $('ul.people').on('click', 'li', function () {
         // 清空 active class
         document.querySelectorAll('.left .person').forEach(function (f) {
             f.classList.remove('active')
