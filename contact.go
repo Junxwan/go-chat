@@ -21,6 +21,10 @@ type contact []person
 
 var contactRelated contact
 
+func init() {
+	contactRelated.add("test", "guest")
+}
+
 // 新增聯絡人
 func addContact(c *gin.Context) {
 	var body ContactBody

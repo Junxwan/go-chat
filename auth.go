@@ -8,9 +8,8 @@ import (
 )
 
 func init() {
-	member.add("junx", "test@gmai.com", "123456")
-	member.add("test1", "test2@gmai.com", "123456")
-	member.add("test2", "test3@gmai.com", "123456")
+	member.add("test", "test@gmai.com", "123456")
+	member.add("guest", "test2@gmai.com", "123456")
 }
 
 // 登入頁
