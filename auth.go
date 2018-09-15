@@ -11,6 +11,7 @@ import (
 type user struct {
 	Username string `form:"username" binding:"required,email"`
 	Password string `form:"password" binding:"required"`
+	Name     string `form:"name" binding:"required"`
 }
 
 type member struct {
@@ -21,7 +22,7 @@ type member struct {
 var account member
 
 func init() {
-	account.addUser("test@gmai.com", "123456")
+	account.addUser("junx", "test@gmai.com", "123456")
 }
 
 // 登入頁
@@ -64,9 +65,10 @@ func register(c *gin.Context) {
 
 	username, _ := c.GetPostForm("username")
 	password, _ := c.GetPostForm("password")
+	name, _ := c.GetPostForm("name")
 
 	if err := c.ShouldBind(&form); err == nil {
-		account.addUser(username, password)
+		account.addUser(name, username, password)
 
 		message = "恭喜你註冊成功，請前往登入頁做登入"
 	} else {
@@ -79,10 +81,11 @@ func register(c *gin.Context) {
 }
 
 // 新增會員
-func (a member) addUser(username, password string) {
+func (a member) addUser(name, username, password string) {
 	account.Account = append(a.Account, user{
 		Username: username,
 		Password: password,
+		Name:     name,
 	})
 }
 
