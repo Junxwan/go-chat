@@ -25,10 +25,10 @@ func showRegister(c *gin.Context) {
 
 // 嘗試登入
 func attempt(c *gin.Context) {
-	username, _ := c.GetPostForm("username")
+	account, _ := c.GetPostForm("account")
 	password, _ := c.GetPostForm("password")
 
-	if (member.exist(username, password)) {
+	if (member.exist(account, password)) {
 		login(c)
 	} else {
 		reade(c, "login.html", gin.H{
@@ -51,12 +51,12 @@ func register(c *gin.Context) {
 	var form user
 	message := ""
 
-	username, _ := c.GetPostForm("username")
+	account, _ := c.GetPostForm("account")
 	password, _ := c.GetPostForm("password")
 	name, _ := c.GetPostForm("name")
 
 	if err := c.ShouldBind(&form); err == nil {
-		member.add(name, username, password)
+		member.add(name, account, password)
 
 		message = "恭喜你註冊成功，請前往登入頁做登入"
 	} else {

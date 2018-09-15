@@ -495,7 +495,7 @@
     // }
 
     function contact() {
-        return fetch('/contact?name=junx')
+        return fetch('/contact?name=test')
                 .then(response => response.json())
                 .then(contact => {
                             if (JSON.stringify(contact) !== '{}') {

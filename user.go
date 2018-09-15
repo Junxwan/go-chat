@@ -2,7 +2,7 @@ package main
 
 // 使用者結構
 type user struct {
-	Username string `form:"username" binding:"required,email"`
+	Account  string `form:"account" binding:"required,email"`
 	Password string `form:"password" binding:"required"`
 	Name     string `form:"name" binding:"required"`
 }
@@ -13,18 +13,18 @@ type account []user
 var member account
 
 // 新增會員
-func (a account) add(name, username, password string) {
+func (a account) add(name, account, password string) {
 	member = append(a, user{
-		Username: username,
+		Account:  account,
 		Password: password,
 		Name:     name,
 	})
 }
 
 // 檢查帳號是否正確
-func (a account) exist(username, password string) bool {
+func (a account) exist(account, password string) bool {
 	for _, u := range a {
-		if u.Username == username && u.Password == password {
+		if u.Account == account && u.Password == password {
 			return true
 		}
 	}
