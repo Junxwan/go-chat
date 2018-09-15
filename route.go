@@ -5,7 +5,11 @@ import (
 	"net/http"
 )
 
-func setupRouter() {
+func setupRouter() *gin.Engine {
+	router := gin.Default()
+
+	router.LoadHTMLGlob("view/*")
+
 	router.Use(checkLogin())
 
 	router.Static("/images", "./images")
@@ -16,8 +20,10 @@ func setupRouter() {
 	router.GET("/register", showRegister)
 	router.POST("/register", register)
 	router.GET("/chat", checkPermission(), getChat)
+	router.POST("/contact", checkPermission(), addContact)
+	router.GET("/contact", getContact)
 
-	router.Run()
+	return router
 }
 
 // 讀取view

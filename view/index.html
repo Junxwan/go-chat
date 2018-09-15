@@ -130,7 +130,6 @@
         width: 40px;
         height: 40px;
         margin-right: 12px;
-        border-radius: 50%;
     }
 
     .container .left .people .person .name {
@@ -332,7 +331,7 @@
         right: 0;
     }
 
-    .container .left a.search {
+    .container .left a.addContact {
         display: block;
         float: left;
         width: 42px;
@@ -396,46 +395,10 @@
     <div class="container">
         <div class="left">
             <div class="top">
-                <input type="text" placeholder="Search" />
-                <a href="javascript:;" class="search"></a>
+                <input type="text" id="contact" placeholder="Contact"/>
+                <a href="javascript:;" class="addContact"></a>
             </div>
             <ul class="people">
-                <li class="person" data-chat="person1">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt=""/>
-                    <span class="name">Thomas Bangalter</span>
-                    <span class="time">2:09 PM</span>
-                    <span class="preview">I was wondering...</span>
-                </li>
-                <li class="person" data-chat="person2">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt=""/>
-                    <span class="name">Dog Woofson</span>
-                    <span class="time">1:44 PM</span>
-                    <span class="preview">I've forgotten how it felt before</span>
-                </li>
-                <li class="person" data-chat="person3">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt=""/>
-                    <span class="name">Louis CK</span>
-                    <span class="time">2:09 PM</span>
-                    <span class="preview">But we’re probably gonna need a new carpet.</span>
-                </li>
-                <li class="person" data-chat="person4">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar4.png" alt=""/>
-                    <span class="name">Bo Jackson</span>
-                    <span class="time">2:09 PM</span>
-                    <span class="preview">It’s not that bad...</span>
-                </li>
-                <li class="person" data-chat="person5">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar5.png" alt=""/>
-                    <span class="name">Michael Jordan</span>
-                    <span class="time">2:09 PM</span>
-                    <span class="preview">Wasup for the third time like is you blind bitch</span>
-                </li>
-                <li class="person" data-chat="person6">
-                    <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt=""/>
-                    <span class="name">Drake</span>
-                    <span class="time">2:09 PM</span>
-                    <span class="preview">howdoyoudoaspace</span>
-                </li>
             </ul>
         </div>
         <div class="right">
@@ -454,6 +417,8 @@
     </div>
 </div>
 <script>
+    contact()
+
     $('li.person').click(function () {
         // 清空 active class
         document.querySelectorAll('.left .person').forEach(function (f) {
@@ -487,6 +452,22 @@
         element.scrollTop = element.scrollHeight;
     })
 
+    $('.addContact').click(function () {
+        fetch('/contact', {
+            method: 'post',
+            body: JSON.stringify({
+                name: "junx",
+                contact: $('#contact').val(),
+            })
+        }).then(function (response) {
+            return response.json();
+        }).then(function (data) {
+            $('.person').remove()
+            contact()
+            alert(data.msg)
+        })
+    })
+
     // var sock = null;
     // var wsuri = "ws://127.0.0.1:8080/websocket"
     //
@@ -512,6 +493,24 @@
     // function send() {
     //     sock.send(document.getElementById('message').value);
     // }
+
+    function contact() {
+        return fetch('/contact?name=junx')
+                .then(response => response.json())
+                .then(contact => {
+                            if (JSON.stringify(contact) !== '{}') {
+                                contact.forEach((i) => {
+                                    $('.people').append('<li class="person" data-chat="person1">\n' +
+                                            '                    <img src="/images/user.png" alt=""/>\n' +
+                                            '                    <span class="name">' + i + '</span>\n' +
+                                            '                    <span class="time">2:09 PM</span>\n' +
+                                            '                    <span class="preview">I was wondering...</span>\n' +
+                                            '                </li>')
+                                })
+                            }
+                        }
+                )
+    }
 </script>
 </body>
 </html>

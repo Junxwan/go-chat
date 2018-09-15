@@ -30,3 +30,13 @@ func (a account) exist(username, password string) bool {
 	}
 	return false
 }
+
+// 取user
+func (a account) get(name string) (user, bool) {
+	for _, u := range a {
+		if u.Name == name {
+			return u, true
+		}
+	}
+	return user{}, false
+}

@@ -1,13 +1,7 @@
 package main
 
-import "github.com/gin-gonic/gin"
-
-var router *gin.Engine
-
 func main() {
-	router = gin.Default()
+	router := setupRouter()
 
-	router.LoadHTMLGlob("view/*")
-
-	setupRouter()
+	router.Run()
 }
