@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-chat/auth"
 )
 
 func setupRouter() *gin.Engine {
@@ -10,17 +9,17 @@ func setupRouter() *gin.Engine {
 
 	router.LoadHTMLGlob("view/*")
 
-	router.Use(auth.CheckLogin())
+	router.Use(checkLogin())
 
 	router.Static("/images", "./images")
 
-	router.GET("/", auth.CheckPermission(), showIndex)
-	router.GET("/login", auth.ShowLogin)
-	router.POST("/login", auth.Attempt)
-	router.GET("/register", auth.ShowRegister)
-	router.POST("/register", auth.Register)
-	router.GET("/chat", auth.CheckPermission(), getChat)
-	router.POST("/contact", auth.CheckPermission(), addContact)
+	router.GET("/", checkPermission(), showIndex)
+	router.GET("/login", showLogin)
+	router.POST("/login", attempt)
+	router.GET("/register", showRegister)
+	router.POST("/register", register)
+	router.GET("/chat", checkPermission(), getChat)
+	router.POST("/contact", checkPermission(), addContact)
 	router.GET("/contact", getContact)
 
 	return router

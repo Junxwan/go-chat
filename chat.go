@@ -28,12 +28,3 @@ func showIndex(c *gin.Context) {
 func getChat(c *gin.Context) {
 	c.JSON(http.StatusOK, Chat)
 }
-
-// 讀取view
-func reade(c *gin.Context, view string, data gin.H) {
-	isLogin, _ := c.Get("isLogin")
-
-	data["isLogin"] = isLogin.(bool)
-
-	c.HTML(http.StatusOK, view, data)
-}
