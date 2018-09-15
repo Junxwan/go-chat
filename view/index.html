@@ -246,11 +246,11 @@
     .container .right .write .write-link.send:before {
         display: inline-block;
         float: left;
-        width: 20px;
+        width: 25px;
         height: 42px;
         margin-left: 51px;
         content: '';
-        background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/382994/send.png");
+        background-image: url("/images/send.png");
         background-repeat: no-repeat;
         background-position: center;
     }
@@ -332,6 +332,20 @@
         right: 0;
     }
 
+    .container .left a.search {
+        display: block;
+        float: left;
+        width: 42px;
+        height: 42px;
+        margin-left: 10px;
+        border: 1px solid var(--light);
+        background-color: var(--blue);
+        background-image: url("/images/search.png");
+        background-repeat: no-repeat;
+        background-position: top 12px left 12px;
+        border-radius: 50%;
+    }
+
     @keyframes slideFromLeft {
         0% {
             margin-left: -200px;
@@ -382,6 +396,8 @@
     <div class="container">
         <div class="left">
             <div class="top">
+                <input type="text" placeholder="Search" />
+                <a href="javascript:;" class="search"></a>
             </div>
             <ul class="people">
                 <li class="person" data-chat="person1">

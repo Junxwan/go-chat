@@ -8,6 +8,8 @@ import (
 func setupRouter() {
 	router.Use(checkLogin())
 
+	router.Static("/images", "./images")
+
 	router.GET("/", checkPermission(), showIndex)
 	router.GET("/login", showLogin)
 	router.POST("/login", attempt)
