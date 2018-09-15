@@ -427,7 +427,7 @@
         </div>
         <div class="right">
             <div class="top"><span>To: <span class="name">Dog Woofson</span></span></div>
-            <div class="chat" data-chat="person1">
+            <div class="chat active-chat" data-chat="person1">
                 <div class="conversation-start">
                     <span>Today</span>
                 </div>
@@ -442,56 +442,38 @@
 </div>
 <script src='//static.codepen.io/assets/common/stopExecutionOnTimeout-41c52890748cd7143004e05d3c5f786c66b19939c4500ce446314d1748483e13.js'></script>
 <script>
-
-    document.querySelector('.chat[data-chat=person1]').classList.add('active-chat')
-    document.querySelector('.person[data-chat=person1]').classList.add('active')
-
-    var friends = {
-                list: document.querySelector('ul.people'),
-                all: document.querySelectorAll('.left .person'),
-                name: ''
-            },
-
-            chat = {
-                container: document.querySelector('.container .right'),
-                current: null,
-                person: null,
-                name: document.querySelector('.container .right .top .name')
-            }
-
-    friends.all.forEach(function (f) {
-        f.addEventListener('mousedown', function () {
-            f.classList.contains('active') || setAciveChat(f)
+    $('li.person').click(function () {
+        // 清空 active class
+        document.querySelectorAll('.left .person').forEach(function (f) {
+            f.classList.remove('active')
         })
+
+        // 針對當前留言對象加active class
+        $(this).addClass('active')
+
+        // 清除留言
+        $('.bubble').remove()
+
+        // 取得當前對話的留言
+        message = fetch('/chat')
+                .then(response => response.json())
+                .then(message => {
+                            message.forEach((i) => {
+                                if (i.To === 1) {
+                                    var div = '<div class="bubble you">' + i.Msg + '</div>'
+                                } else {
+                                    var div = '<div class="bubble me">' + i.Msg + '</div>'
+                                }
+
+                                $('.active-chat .conversation-start').after(div)
+                            })
+                        }
+                )
+
+        // 留言視窗滑到最後
+        var element = document.querySelector(".chat");
+        element.scrollTop = element.scrollHeight;
     })
-
-    function setAciveChat(f) {
-        friends.list.querySelector('.active').classList.remove('active')
-        f.classList.add('active')
-        chat.current = chat.container.querySelector('.active-chat')
-        chat.person = f.getAttribute('data-chat')
-        chat.current.classList.remove('active-chat')
-        chat.container.querySelector('[data-chat="' + chat.person + '"]').classList.add('active-chat')
-        friends.name = f.querySelector('.name').innerText
-        chat.name.innerHTML = friends.name
-    }
-
-    var element = document.querySelector(".chat");
-    element.scrollTop = element.scrollHeight;
-
-    message = fetch('/chat')
-            .then(response => response.json())
-            .then(message => {
-                        message.forEach((i) => {
-                            if (i.To === 1) {
-                                var div = '<div class="bubble you">' + i.Msg + '</div>'
-                            } else {
-                                var div = '<div class="bubble me">' + i.Msg + '</div>'
-                            }
-                            $('.active-chat .conversation-start').after(div)
-                        })
-                    }
-            )
 
     // var sock = null;
     // var wsuri = "ws://127.0.0.1:8080/websocket"
@@ -518,7 +500,6 @@
     // function send() {
     //     sock.send(document.getElementById('message').value);
     // }
-
 </script>
 </body>
 </html>
