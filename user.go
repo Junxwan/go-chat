@@ -7,9 +7,14 @@ type user struct {
 	Name     string `form:"name" binding:"required"`
 }
 
+// 已註冊的使用者
+type account []user
+
+var member account
+
 // 新增會員
-func (a member) addUser(name, username, password string) {
-	account.Account = append(a.Account, user{
+func (a account) addUser(name, username, password string) {
+	member = append(a, user{
 		Username: username,
 		Password: password,
 		Name:     name,
@@ -17,8 +22,8 @@ func (a member) addUser(name, username, password string) {
 }
 
 // 檢查帳號是否正確
-func (a member) isUser(username, password string) bool {
-	for _, u := range a.Account {
+func (a account) isUser(username, password string) bool {
+	for _, u := range a {
 		if u.Username == username && u.Password == password {
 			return true
 		}
