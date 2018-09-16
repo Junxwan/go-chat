@@ -18,9 +18,7 @@ func setupRouter() *gin.Engine {
 	router.POST("/login", attempt)
 	router.GET("/register", showRegister)
 	router.POST("/register", register)
-	router.GET("/chat", checkPermission(), getChat)
-	router.POST("/contact", checkPermission(), addContact)
-	router.GET("/contact", getContact)
+	router.GET("/ws", registerWs)
 
 	return router
 }

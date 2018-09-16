@@ -2,21 +2,29 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"log"
 	"net/http"
 )
 
-type message struct {
-	To  int
-	Msg string
+// 管理用戶websocket
+type connection struct {
+	ws map[int]*websocket.Conn
 }
 
-var Chat []message
+var cron connection
+
+var socket = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
 
 func init() {
-	Chat = append(Chat, message{To: 1, Msg: "Hello,"})
-	Chat = append(Chat, message{To: 1, Msg: "it's me."})
-	Chat = append(Chat, message{To: 2, Msg: "... about who we used to be."})
-	Chat = append(Chat, message{To: 1, Msg: "I was wondering..."})
+	cron.ws = make(map[int]*websocket.Conn)
 }
 
 // 首頁
@@ -24,7 +32,19 @@ func showIndex(c *gin.Context) {
 	reade(c, "index.html", gin.H{})
 }
 
-// 聊天室訊息
-func getChat(c *gin.Context) {
-	c.JSON(http.StatusOK, Chat)
+// 註冊websocket
+func registerWs(c *gin.Context) {
+	ws, err := socket.Upgrade(c.Writer, c.Request, nil)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	cron.add(1, ws)
+}
+
+// 新增用戶websocket
+func (c connection) add(id int, ws *websocket.Conn) {
+	c.ws[id] = ws
 }

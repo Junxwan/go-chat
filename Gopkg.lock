@@ -46,6 +46,14 @@
   revision = "5a0f697c9ed9d68fef0116532c6e05cfeae00e55"
 
 [[projects]]
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
+
+[[projects]]
   digest = "1:be97e109f627d3ba8edfef50c9c74f0d0c17cbe3a2e924a8985e4804a894f282"
   name = "github.com/json-iterator/go"
   packages = ["."]
@@ -112,6 +120,7 @@
   input-imports = [
     "github.com/appleboy/gofight",
     "github.com/gin-gonic/gin",
+    "github.com/gorilla/websocket",
     "github.com/stretchr/testify/assert",
   ]
   solver-name = "gps-cdcl"

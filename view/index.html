@@ -417,7 +417,23 @@
     </div>
 </div>
 <script>
-    contact()
+    var sock = null;
+    var wsuri = "ws://127.0.0.1:8080/ws"
+
+    window.onload = function () {
+        sock = new WebSocket(wsuri)
+
+        sock.onopen = function () {
+        }
+
+        sock.onclose = function (e) {
+        }
+
+        sock.onmessage = function (e) {
+            console.log("message received: " + e.data)
+        }
+    }
+
 
     $('ul.people').on('click', 'li', function () {
         // 清空 active class
@@ -468,49 +484,29 @@
         })
     })
 
-    // var sock = null;
-    // var wsuri = "ws://127.0.0.1:8080/websocket"
-    //
-    // window.onload = function () {
-    //
-    //     console.log("onload")
-    //
-    //     sock = new WebSocket(wsuri)
-    //
-    //     sock.onopen = function () {
-    //         console.log("connected to " + wsuri)
-    //     }
-    //
-    //     sock.onclose = function (e) {
-    //         console.log("connection closed (" + e.code + ")")
-    //     }
-    //
-    //     sock.onmessage = function (e) {
-    //         console.log("message received: " + e.data)
-    //     }
-    // }
+
     //
     // function send() {
     //     sock.send(document.getElementById('message').value);
     // }
 
-    function contact() {
-        return fetch('/contact?name=' + localStorage.getItem("name"))
-                .then(response => response.json())
-                .then(contact => {
-                            if (JSON.stringify(contact) !== '{}') {
-                                contact.forEach((i) => {
-                                    $('.people').append('<li class="person" data-chat="person1">\n' +
-                                            '                    <img src="/images/user.png" alt=""/>\n' +
-                                            '                    <span class="name">' + i + '</span>\n' +
-                                            '                    <span class="time">2:09 PM</span>\n' +
-                                            '                    <span class="preview">I was wondering...</span>\n' +
-                                            '                </li>')
-                                })
-                            }
-                        }
-                )
-    }
+    // function contact() {
+    //     return fetch('/contact?id=' + localStorage.getItem("id"))
+    //             .then(response => response.json())
+    //             .then(contact => {
+    //                         if (JSON.stringify(contact) !== '{}') {
+    //                             contact.forEach((i) => {
+    //                                 $('.people').append('<li class="person" data-chat="person1">\n' +
+    //                                         '                    <img src="/images/user.png" alt=""/>\n' +
+    //                                         '                    <span class="name">' + i + '</span>\n' +
+    //                                         '                    <span class="time">2:09 PM</span>\n' +
+    //                                         '                    <span class="preview">I was wondering...</span>\n' +
+    //                                         '                </li>')
+    //                             })
+    //                         }
+    //                     }
+    //             )
+    // }
 </script>
 </body>
 </html>
