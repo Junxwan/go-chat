@@ -30,17 +30,17 @@ func showRegister(c *gin.Context) {
 // 嘗試登入
 func attempt(c *gin.Context) {
 	var form loginForm
-	name := ""
+	id := 0
 
 	c.ShouldBind(&form)
 
 	if (login(c, form.Account, form.Password)) {
 		m, _ := member.getByAccount(form.Account)
-		name = m.Name
+		id = m.ID
 	}
 
 	reade(c, "login.html", gin.H{
-		"name": name,
+		"id": id,
 	})
 }
 
@@ -96,4 +96,3 @@ func checkLogin() gin.HandlerFunc {
 		}
 	}
 }
-

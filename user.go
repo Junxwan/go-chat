@@ -2,6 +2,7 @@ package main
 
 // 使用者結構
 type user struct {
+	ID       int
 	Account  string `form:"account" binding:"required,email"`
 	Password string `form:"password" binding:"required"`
 	Name     string `form:"name" binding:"required"`
@@ -15,6 +16,7 @@ var member account
 // 新增會員
 func (a account) add(name, account, password string) {
 	member = append(a, user{
+		ID:       len(a) + 1,
 		Account:  account,
 		Password: password,
 		Name:     name,
