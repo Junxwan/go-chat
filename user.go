@@ -34,9 +34,9 @@ func (a account) exist(account, password string) bool {
 }
 
 // 根據名稱取user
-func (a account) get(name string) (user, bool) {
+func (a account) get(id int) (user, bool) {
 	for _, u := range a {
-		if u.Name == name {
+		if u.ID == id {
 			return u, true
 		}
 	}
