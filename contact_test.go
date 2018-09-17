@@ -1,10 +1,8 @@
 package main
 
 import (
-	"github.com/appleboy/gofight"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"net/http"
 	"testing"
 )
 
@@ -13,117 +11,63 @@ func init() {
 }
 
 func initial() {
-	contactRelated = []person{}
+	contacts = []person{}
 	member = []user{}
+	chat = rooms{}
 }
 
-func TestGetContact(t *testing.T) {
+func TestAdd(t *testing.T) {
 	initial()
 
-	contactRelated = append(contactRelated, person{
-		Name: "test",
-		User: []string{"1"},
+	userId1, userId2 := createMember()
+
+	err := contacts.add(userId1, userId2)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, contacts[0], person{
+		id:   1,
+		room: []int{1},
 	})
-
-	c, _, ok := contactRelated.get("test")
-
-	assert.True(t, ok)
-	assert.Equal(t, "test", c.Name)
+	assert.Equal(t, contacts[1], person{
+		id:   2,
+		room: []int{1},
+	})
 }
 
-func TestAddContact(t *testing.T) {
+func TestAddMany(t *testing.T) {
 	initial()
 
-	ok := contactRelated.add("name", "user")
+	userId1, userId2 := createMember()
+	userId3 := member.add("name2", "name2@gmail.com", "123456")
 
-	assert.True(t, ok)
-	assert.Equal(t, contactRelated[0], person{
-		Name: "name",
-		User: []string{"user"},
+	contacts.add(userId1, userId2)
+	contacts.add(userId1, userId3)
+
+	c, _, _ := contacts.get(userId1)
+
+	assert.Equal(t, c, person{
+		id:   userId1,
+		room: []int{1, 2},
 	})
+
 }
 
-func TestGetContactApi(t *testing.T) {
+func TestGet(t *testing.T) {
 	initial()
 
-	contactRelated = append(contactRelated, person{
-		Name: "add",
-		User: []string{"sam"},
-	})
+	p := person{
+		id:   1,
+		room: []int{1},
+	}
 
-	getContactApi(t, func(t *testing.T, r gofight.HTTPResponse) {
-		assert.JSONEq(t, `["sam"]`, r.Body.String())
-		assert.Equal(t, http.StatusOK, r.Code)
-	})
-}
+	contacts = append(contacts, p)
 
-func TestGetContactApiNotFound(t *testing.T) {
-	initial()
+	c, i, err := contacts.get(1)
 
-	getContactApi(t, func(t *testing.T, r gofight.HTTPResponse) {
-		assert.JSONEq(t, `{}`, r.Body.String())
-		assert.Equal(t, http.StatusOK, r.Code)
-	})
-}
-
-func TestAddContactApi(t *testing.T) {
-	initial()
-
-	contactRelated = append(contactRelated, person{
-		Name: "junx",
-		User: []string{"sam", "add"},
-	})
-
-	member = append(member, user{
-		Name:     "add",
-		Account:  "test@gmail.com",
-		Password: "123456",
-	})
-
-	addContactApi(t, func(t *testing.T, r gofight.HTTPResponse) {
-		assert.JSONEq(t, `{"msg":"成功"}`, r.Body.String())
-		assert.Equal(t, http.StatusOK, r.Code)
-	})
-}
-
-func TestAddContactApiNotFound(t *testing.T) {
-	initial()
-
-	addContactApi(t, func(t *testing.T, r gofight.HTTPResponse) {
-		assert.JSONEq(t, `{"msg": "找不到用戶"}`, r.Body.String())
-		assert.Equal(t, http.StatusOK, r.Code)
-	})
-}
-
-func addContactApi(t *testing.T, f func(t *testing.T, r gofight.HTTPResponse)) {
-	r := gofight.New()
-
-	r.POST("/contact").
-		SetDebug(false).
-		SetJSON(gofight.D{
-			"name":    "sam",
-			"contact": "add",
-		}).
-		SetCookie(gofight.H{
-			"login": "123445",
-		}).
-		Run(setupRouter(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			f(t, r)
-		})
-}
-
-func getContactApi(t *testing.T, f func(t *testing.T, r gofight.HTTPResponse)) {
-	r := gofight.New()
-
-	r.GET("/contact").
-		SetDebug(false).
-		SetQuery(gofight.H{
-			"name": "add",
-		}).
-		SetCookie(gofight.H{
-			"login": "123445",
-		}).
-		Run(setupRouter(), func(r gofight.HTTPResponse, rq gofight.HTTPRequest) {
-			f(t, r)
-		})
+	assert.Equal(t, nil, err)
+	assert.Equal(t, 0, i)
+	assert.Equal(t, person{
+		id:   1,
+		room: []int{1},
+	}, c)
 }

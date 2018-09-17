@@ -15,6 +15,8 @@ type loginForm struct {
 func init() {
 	member.add("test", "test@gmai.com", "123456")
 	member.add("guest", "test2@gmai.com", "123456")
+	member.add("test2", "test2@gmai.com", "123456")
+	member.add("test3", "test3@gmai.com", "123456")
 }
 
 // 登入頁

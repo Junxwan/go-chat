@@ -4,15 +4,24 @@ import "fmt"
 
 type room struct {
 	ID      int
+	User    []roomUser
 	Message []message
-	User    map[int]string
 }
 
-type rooms map[int]room
+type roomUser struct {
+	ID   int
+	Name string
+}
 
-var roomAll = make(rooms, 100)
+type message struct {
+	ID  int
+	Msg string
+}
 
-// 建立一個聊天房間
+type rooms []room
+
+var chat rooms
+
 func newRoom(userId1, userId2 int) (int, error) {
 	m1, ok1 := member.get(userId1)
 
@@ -26,22 +35,45 @@ func newRoom(userId1, userId2 int) (int, error) {
 		return 0, fmt.Errorf("找不到ID用戶:%d", userId2)
 	}
 
-	userId := make(map[int]string)
-	userId[userId1] = m1.Name
-	userId[userId2] = m2.Name
+	roomId := len(chat) + 1
 
-	id := userId1 + userId1
-
-	roomAll[id] = room{
-		ID:      id,
+	chat = append(chat, room{
+		ID: roomId,
+		User: []roomUser{
+			roomUser{
+				ID:   userId1,
+				Name: m1.Name,
+			},
+			roomUser{
+				ID:   userId2,
+				Name: m2.Name,
+			}},
 		Message: []message{},
-		User:    userId,
-	}
+	})
 
-	return id, nil
+	return roomId, nil
 }
 
-// 取房間
-func (r rooms) get(id int) room {
-	return roomAll[id]
+func (r rooms) get(roomId int) (room, bool) {
+	for _, v := range r {
+		if v.ID == roomId {
+			return v, true
+		}
+	}
+
+	return room{}, false
+}
+
+func (r rooms) getUser(roomId, masterId int) (roomUser, bool) {
+	user := roomUser{}
+
+	room, _ := r.get(roomId)
+
+	for _, v := range room.User {
+		if v.ID != masterId {
+			return v, true
+		}
+	}
+
+	return user, false
 }

@@ -14,13 +14,17 @@ type account []user
 var member account
 
 // 新增會員
-func (a account) add(name, account, password string) {
+func (a account) add(name, account, password string) int {
+	id := len(a) + 1
+
 	member = append(a, user{
-		ID:       len(a) + 1,
+		ID: id,
 		Account:  account,
 		Password: password,
 		Name:     name,
 	})
+
+	return id
 }
 
 // 檢查帳號是否正確
@@ -37,6 +41,15 @@ func (a account) exist(account, password string) bool {
 func (a account) get(id int) (user, bool) {
 	for _, u := range a {
 		if u.ID == id {
+			return u, true
+		}
+	}
+	return user{}, false
+}
+
+func (a account) getByName(name string) (user, bool) {
+	for _, u := range a {
+		if u.Name == name {
 			return u, true
 		}
 	}

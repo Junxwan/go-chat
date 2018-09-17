@@ -474,8 +474,8 @@
         fetch('/contact', {
             method: 'post',
             body: JSON.stringify({
-                name: "junx",
-                contact: $('#contact').val(),
+                id: localStorage.getItem("id"),
+                name: $('#contact').val(),
             })
         }).then(function (response) {
             return response.json();
@@ -499,14 +499,16 @@
                 .then(contact => {
                             if (JSON.stringify(contact) !== '{}') {
                                 Object.keys(contact).forEach((k) => {
-                                    if (id != k) {
-                                        $('.people').append('<li class="person" data-chat="person1">\n' +
-                                                '                    <img src="/images/user.png" alt=""/>\n' +
-                                                '                    <span class="name" date-id="' + k +'" >' + contact[k] + '</span>\n' +
-                                                '                    <span class="time">2:09 PM</span>\n' +
-                                                '                    <span class="preview">I was wondering...</span>\n' +
-                                                '                </li>')
-                                    }
+                                    contact[k].User.forEach((v) => {
+                                        if (id != v.ID) {
+                                            $('.people').append('<li class="person" data-chat="person1">\n' +
+                                                    '                    <img src="/images/user.png" alt=""/>\n' +
+                                                    '                    <span class="name" date-id="' + k + '" >' + v.Name + '</span>\n' +
+                                                    '                    <span class="time">2:09 PM</span>\n' +
+                                                    '                    <span class="preview">I was wondering...</span>\n' +
+                                                    '                </li>')
+                                        }
+                                    })
                                 })
                             }
                         }
